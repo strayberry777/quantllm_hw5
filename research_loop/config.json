@@ -1,0 +1,15 @@
+{
+  "periods": {
+    "train":   {"start": "2020-01-02", "end": "2022-11-30", "note": "探索与改进，AI 可以看全部指标"},
+    "valid":   {"start": "2023-01-03", "end": "2024-11-29", "note": "决定晋级；与留出期之间空出约 1 个月，避免远期收益跨进留出期"},
+    "holdout": {"start": "2025-01-02", "end": "2026-09-30", "note": "最终考试：每个因子只能考一次，迭代过程中不可见"}
+  },
+  "eval": {"horizon": 5, "groups": 10, "rebalance": 5, "exclude_st": true, "top_frac": 0.1,
+           "capital": 100000000, "commission": 0.0001, "stamp": 0.0005, "slippage": 0.0005, "max_participation": 0.1},
+  "objectives": {
+    "IC":    "验证期 RankIC 的 Newey-West t 值",
+    "SHARPE": "验证期「做多最高 10%」扣费后的夏普比率",
+    "MDD":   "验证期「做多最高 10%」扣费后的最大回撤（越小越好）",
+    "MIX":   "0.5 × 夏普 + 0.5 × 回撤控制，两者先在全部候选里标准化（z 分数）再相加"
+  }
+}
