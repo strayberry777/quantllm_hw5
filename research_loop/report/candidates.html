@@ -1,0 +1,304 @@
+<html><head><meta charset="utf-8"><style>
+body{font-family:'Noto Sans CJK SC',sans-serif;background:#fcfcfb;color:#1a1a19;margin:0;padding:24px;width:1500px}
+h1{font-size:20px;margin:0 0 4px} p{margin:0 0 14px;color:#6b6a66;font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th{text-align:right;color:#8a8984;font-weight:500;padding:8px;border-bottom:1px solid #e4e3df;background:#f4f3ef}
+td{text-align:right;padding:7px 8px;border-bottom:1px solid #eeede9;vertical-align:top}
+th:nth-child(-n+3),td:nth-child(-n+3){text-align:left}
+td span{color:#9a9893;font-size:11px} td.name{max-width:520px} td.id{white-space:nowrap}
+.pill{display:inline-block;padding:1px 8px;border-radius:4px;font-weight:500;font-size:11.5px;white-space:nowrap}
+.pill.up{background:#e3f1e8;color:#2f7a52} .pill.base{background:#eef0e6;color:#6b7a3a} .pill.rej{background:#f3f1ec;color:#8a8984}
+tr.up td{background:#f4faf6}
+</style></head><body>
+<h1>全部候选 · 成功与失败同样保留</h1>
+<p>72 个实验按时间顺序排列；决策规则固定：验证期 IC t ≥ 当时的 Bonferroni 门槛且为正、训练期 t ≥ 2 同向、与池内因子相关 &lt; 0.7。夏普、回撤、超额为验证期「做多最高 10%」扣费后结果。</p>
+<table><tr><th>实验 / 轮次</th><th>因子 / 假设</th><th>决策</th><th>验证 RankIC</th><th>验证 IC t</th><th>训练 IC t</th><th>夏普</th><th>最大回撤</th><th>年化超额</th><th>年换手</th></tr>
+<tr class="up"><td class="id">e0<br><span>第 0 轮</span></td>
+<td class="name">REV5<br><span>内建基准：−(C_t / C_{t−5} − 1)：过去 5 日跌得越多，因子值越高</span></td>
+<td><b class="pill up">基准 · 晋升</b></td>
+<td>0.0371</td><td>3.1</td><td>3.8</td>
+<td>-0.14</td><td>-50.9%</td><td>-9.9%</td><td>86</td></tr><tr class="up"><td class="id">e1<br><span>第 0 轮</span></td>
+<td class="name">EXT5<br><span>内建基准：−|rank(5 日收益) − 0.5|：过去 5 日涨跌越接近中间，因子值越高</span></td>
+<td><b class="pill up">基准 · 晋升</b></td>
+<td>0.0529</td><td>9.2</td><td>9.7</td>
+<td>0.20</td><td>-37.4%</td><td>-0.0%</td><td>87</td></tr><tr class="base"><td class="id">e2<br><span>第 0 轮</span></td>
+<td class="name">MOM20<br><span>内建基准：C_{t−5} / C_{t−20} − 1：跳过最近 5 日，避开短期反转</span></td>
+<td><b class="pill base">基准 · 拒绝：方向为负</b></td>
+<td>-0.0403</td><td>-3.2</td><td>-2.4</td>
+<td>-0.85</td><td>-60.2%</td><td>-29.8%</td><td>52</td></tr><tr class="up"><td class="id">e3<br><span>第 0 轮</span></td>
+<td class="name">LOWVOL20<br><span>内建基准：−std(过去 20 日日收益)</span></td>
+<td><b class="pill up">基准 · 晋升</b></td>
+<td>0.0699</td><td>3.8</td><td>6.8</td>
+<td>0.57</td><td>-16.4%</td><td>+4.6%</td><td>26</td></tr><tr class="up"><td class="id">e4<br><span>第 0 轮</span></td>
+<td class="name">ILLIQ20<br><span>内建基准：−log(过去 20 日日均成交额)；数据没有市值，用成交额近似「小而冷门」</span></td>
+<td><b class="pill up">基准 · 晋升</b></td>
+<td>0.0666</td><td>5.3</td><td>4.9</td>
+<td>0.57</td><td>-34.7%</td><td>+10.6%</td><td>43</td></tr><tr class="base"><td class="id">e5<br><span>第 0 轮</span></td>
+<td class="name">MAX20<br><span>内建基准：−max(过去 20 日单日收益)</span></td>
+<td><b class="pill base">基准 · 拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0685</td><td>4.9</td><td>7.9</td>
+<td>0.33</td><td>-26.1%</td><td>+1.3%</td><td>36</td></tr><tr class="rej"><td class="id">e6<br><span>第 1 轮</span></td>
+<td class="name">LVILQ<br><span>低波动与低成交额相关仅 0.37：前者控回撤，后者给超额。两者排名等权相加，希望同时提高夏普、压低回撤（冲混合目标）。</span></td>
+<td><b class="pill rej">拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0799</td><td>5.3</td><td>6.8</td>
+<td>0.52</td><td>-25.4%</td><td>+6.1%</td><td>30</td></tr><tr class="rej"><td class="id">e7<br><span>第 1 轮</span></td>
+<td class="name">LOWVOL60<br><span>低波动是回撤目标的冠军。窗口从 20 日拉长到 60 日，波动估计更稳，排名变化更慢：希望回撤更小、换手更低。</span></td>
+<td><b class="pill rej">拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0672</td><td>3.3</td><td>5.9</td>
+<td>0.77</td><td>-16.0%</td><td>+7.5%</td><td>12</td></tr><tr class="rej"><td class="id">e8<br><span>第 1 轮</span></td>
+<td class="name">LOWBETA60<br><span>低风险的另一种定义：对市场（股票池等权）的 60 日贝塔越低越好。检验低波动的好处是否来自市场敞口低，在大跌时回撤更小。</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0101</td><td>0.5</td><td>0.9</td>
+<td>-0.12</td><td>-29.0%</td><td>-7.3%</td><td>16</td></tr><tr class="rej"><td class="id">e9<br><span>第 1 轮</span></td>
+<td class="name">LV_EXT<br><span>极端度 IC 最强但做多端弱，低波动做多端强。先用极端度惩罚两头，再偏好低波动：两者排名等权相加，希望把极端度的 IC </span></td>
+<td><b class="pill rej">拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0737</td><td>5.5</td><td>8.0</td>
+<td>0.16</td><td>-32.4%</td><td>-1.8%</td><td>64</td></tr><tr class="up"><td class="id">e10<br><span>第 1 轮</span></td>
+<td class="name">ABNVOL<br><span>注意力效应：近 5 日成交额相对近 60 日突然放大的股票被过度关注，之后跑输。因子 = −log(5 日均成交额 / </span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0601</td><td>5.6</td><td>4.0</td>
+<td>0.53</td><td>-38.9%</td><td>+11.2%</td><td>44</td></tr><tr class="rej"><td class="id">e11<br><span>第 2 轮</span></td>
+<td class="name">IVOL60<br><span>低贝塔无效、低波动有效，推测低波动的好处来自个股特有的风险。特质波动 = 60 日内对市场回归后的残差标准差，越低越好。</span></td>
+<td><b class="pill rej">拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0804</td><td>5.6</td><td>7.1</td>
+<td>0.83</td><td>-23.9%</td><td>+12.3%</td><td>16</td></tr><tr class="rej"><td class="id">e12<br><span>第 2 轮</span></td>
+<td class="name">DOWNVOL60<br><span>回撤来自下跌，只算下跌日的波动（60 日下行半方差的平方根），越低越好。希望比总波动更直接地压低最大回撤。</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0492</td><td>2.2</td><td>4.3</td>
+<td>0.72</td><td>-16.3%</td><td>+6.5%</td><td>13</td></tr><tr class="rej"><td class="id">e13<br><span>第 2 轮</span></td>
+<td class="name">LOWVOL120<br><span>20 日→60 日时低波动的夏普和回撤都变好、换手下降。继续拉长到 120 日，检验这个趋势是否延续，还是开始变慢变钝。</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0593</td><td>2.8</td><td>5.0</td>
+<td>0.73</td><td>-17.1%</td><td>+6.8%</td><td>8</td></tr><tr class="rej"><td class="id">e14<br><span>第 2 轮</span></td>
+<td class="name">LV60_ILQ<br><span>LVILQ 用的是 20 日低波动，验证期掉得多。换成两期都稳定的 60 日低波动，再与低成交额等权组合，冲混合目标。</span></td>
+<td><b class="pill rej">拒绝：与 ILLIQ20 重复</b></td>
+<td>0.0812</td><td>4.9</td><td>6.3</td>
+<td>0.55</td><td>-25.4%</td><td>+6.4%</td><td>21</td></tr><tr class="rej"><td class="id">e15<br><span>第 2 轮</span></td>
+<td class="name">RANGE20<br><span>用日内振幅衡量风险：20 日平均 (最高价 − 最低价) / 前收盘，越低越好。信息来自高低价，而不是收盘价，可能与低波</span></td>
+<td><b class="pill rej">拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0745</td><td>3.8</td><td>6.3</td>
+<td>0.71</td><td>-16.2%</td><td>+6.8%</td><td>17</td></tr><tr class="rej"><td class="id">e16<br><span>第 3 轮</span></td>
+<td class="name">IVOL20<br><span>特质波动 60 日两期都好。用 20 日窗口检验它对窗口是否敏感：如果 20 日明显变差，说明需要较长窗口才能估准特质风</span></td>
+<td><b class="pill rej">拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0844</td><td>7.0</td><td>8.9</td>
+<td>0.59</td><td>-30.1%</td><td>+8.5%</td><td>33</td></tr><tr class="rej"><td class="id">e17<br><span>第 3 轮</span></td>
+<td class="name">LV60_IV60<br><span>低波动 60 日回撤最小，特质波动 60 日夏普最高。两者排名等权相加，正好对应「一半夏普、一半回撤」的混合目标。</span></td>
+<td><b class="pill rej">拒绝：与 LOWVOL20 重复</b></td>
+<td>0.0746</td><td>4.2</td><td>6.5</td>
+<td>0.81</td><td>-20.2%</td><td>+9.4%</td><td>14</td></tr><tr class="rej"><td class="id">e18<br><span>第 3 轮</span></td>
+<td class="name">STKMDD60<br><span>直接用回撤当因子：个股过去 60 日从高点下来的最大回撤越小越好。检验「过去回撤小」能否延续成「组合回撤小」。</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0267</td><td>1.3</td><td>1.1</td>
+<td>0.48</td><td>-22.7%</td><td>+3.2%</td><td>14</td></tr><tr class="up"><td class="id">e19<br><span>第 3 轮</span></td>
+<td class="name">SKEW60<br><span>彩票偏好：收益分布右偏（偶尔暴涨）的股票被高估，之后跑输。因子 = −60 日日收益偏度。与低风险家族的信息不同，希望找</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0361</td><td>4.3</td><td>4.3</td>
+<td>0.34</td><td>-34.3%</td><td>+4.0%</td><td>26</td></tr><tr class="rej"><td class="id">e20<br><span>第 3 轮</span></td>
+<td class="name">IV60_ILQ<br><span>低波动 + 低成交额的组合两次都是训练期好、验证期掉。换成两期都稳的特质波动 60 日再与低成交额组合，检验问题是否出在</span></td>
+<td><b class="pill rej">拒绝：与 ILLIQ20 重复</b></td>
+<td>0.0890</td><td>7.1</td><td>6.8</td>
+<td>0.63</td><td>-28.3%</td><td>+10.3%</td><td>23</td></tr><tr class="rej"><td class="id">e21<br><span>第 4 轮</span></td>
+<td class="name">A001<br><span>Alpha101 #1（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0130</td><td>-2.1</td><td>-3.6</td>
+<td>0.01</td><td>-46.6%</td><td>-5.0%</td><td>80</td></tr><tr class="up"><td class="id">e22<br><span>第 4 轮</span></td>
+<td class="name">A002<br><span>Alpha101 #2（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0172</td><td>4.0</td><td>2.1</td>
+<td>0.07</td><td>-39.3%</td><td>-3.4%</td><td>83</td></tr><tr class="rej"><td class="id">e23<br><span>第 4 轮</span></td>
+<td class="name">A003<br><span>Alpha101 #3（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0171</td><td>2.7</td><td>6.0</td>
+<td>0.04</td><td>-39.9%</td><td>-4.4%</td><td>77</td></tr><tr class="rej"><td class="id">e24<br><span>第 4 轮</span></td>
+<td class="name">A004<br><span>Alpha101 #4（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：与 REV5 重复</b></td>
+<td>0.0399</td><td>3.7</td><td>4.7</td>
+<td>0.34</td><td>-40.5%</td><td>+5.1%</td><td>83</td></tr><tr class="rej"><td class="id">e25<br><span>第 4 轮</span></td>
+<td class="name">A005<br><span>Alpha101 #5（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0045</td><td>0.5</td><td>0.9</td>
+<td>-0.13</td><td>-42.7%</td><td>-8.8%</td><td>61</td></tr><tr class="rej"><td class="id">e26<br><span>第 4 轮</span></td>
+<td class="name">A006<br><span>Alpha101 #6（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0242</td><td>3.0</td><td>5.4</td>
+<td>0.13</td><td>-45.1%</td><td>-1.8%</td><td>77</td></tr><tr class="rej"><td class="id">e27<br><span>第 4 轮</span></td>
+<td class="name">A007<br><span>Alpha101 #7（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0171</td><td>-2.2</td><td>-2.6</td>
+<td>0.24</td><td>-40.0%</td><td>+1.3%</td><td>83</td></tr><tr class="rej"><td class="id">e28<br><span>第 4 轮</span></td>
+<td class="name">A008<br><span>Alpha101 #8（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0182</td><td>1.8</td><td>2.5</td>
+<td>-0.41</td><td>-46.7%</td><td>-16.4%</td><td>72</td></tr><tr class="rej"><td class="id">e29<br><span>第 4 轮</span></td>
+<td class="name">A009<br><span>Alpha101 #9（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0045</td><td>0.9</td><td>3.6</td>
+<td>-0.61</td><td>-51.1%</td><td>-21.6%</td><td>72</td></tr><tr class="rej"><td class="id">e30<br><span>第 4 轮</span></td>
+<td class="name">A010<br><span>Alpha101 #10（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0035</td><td>0.8</td><td>2.5</td>
+<td>-0.54</td><td>-49.9%</td><td>-19.6%</td><td>72</td></tr><tr class="rej"><td class="id">e31<br><span>第 4 轮</span></td>
+<td class="name">A011<br><span>Alpha101 #11（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0067</td><td>1.2</td><td>2.3</td>
+<td>-0.06</td><td>-43.1%</td><td>-7.0%</td><td>87</td></tr><tr class="up"><td class="id">e32<br><span>第 4 轮</span></td>
+<td class="name">A012<br><span>Alpha101 #12（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0349</td><td>8.1</td><td>8.3</td>
+<td>-0.21</td><td>-43.4%</td><td>-10.8%</td><td>76</td></tr><tr class="up"><td class="id">e33<br><span>第 4 轮</span></td>
+<td class="name">A013<br><span>Alpha101 #13（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0391</td><td>6.0</td><td>6.5</td>
+<td>-0.05</td><td>-40.9%</td><td>-6.7%</td><td>82</td></tr><tr class="rej"><td class="id">e34<br><span>第 4 轮</span></td>
+<td class="name">A014<br><span>Alpha101 #14（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0182</td><td>2.6</td><td>4.9</td>
+<td>0.28</td><td>-43.6%</td><td>+2.2%</td><td>81</td></tr><tr class="up"><td class="id">e35<br><span>第 4 轮</span></td>
+<td class="name">A015<br><span>Alpha101 #15（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0278</td><td>5.5</td><td>6.2</td>
+<td>0.03</td><td>-39.5%</td><td>-4.5%</td><td>85</td></tr><tr class="rej"><td class="id">e36<br><span>第 4 轮</span></td>
+<td class="name">A016<br><span>Alpha101 #16（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：与 A013 重复</b></td>
+<td>0.0393</td><td>5.7</td><td>6.3</td>
+<td>-0.03</td><td>-40.2%</td><td>-6.1%</td><td>83</td></tr><tr class="rej"><td class="id">e37<br><span>第 4 轮</span></td>
+<td class="name">A017<br><span>Alpha101 #17（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0094</td><td>1.4</td><td>1.9</td>
+<td>-0.36</td><td>-48.1%</td><td>-15.0%</td><td>77</td></tr><tr class="up"><td class="id">e38<br><span>第 4 轮</span></td>
+<td class="name">A018<br><span>Alpha101 #18（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0370</td><td>5.5</td><td>6.6</td>
+<td>-0.31</td><td>-45.8%</td><td>-13.4%</td><td>82</td></tr><tr class="up"><td class="id">e39<br><span>第 4 轮</span></td>
+<td class="name">A019<br><span>Alpha101 #19（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0327</td><td>3.4</td><td>2.9</td>
+<td>0.08</td><td>-40.7%</td><td>-3.0%</td><td>54</td></tr><tr class="rej"><td class="id">e40<br><span>第 4 轮</span></td>
+<td class="name">A020<br><span>Alpha101 #20（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0235</td><td>-4.0</td><td>-2.9</td>
+<td>-0.41</td><td>-49.9%</td><td>-16.3%</td><td>73</td></tr><tr class="rej"><td class="id">e41<br><span>第 4 轮</span></td>
+<td class="name">A022<br><span>Alpha101 #22（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0059</td><td>1.2</td><td>2.0</td>
+<td>-0.09</td><td>-44.1%</td><td>-7.6%</td><td>95</td></tr><tr class="up"><td class="id">e42<br><span>第 4 轮</span></td>
+<td class="name">A023<br><span>Alpha101 #23（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0264</td><td>4.1</td><td>4.7</td>
+<td>-0.69</td><td>-56.1%</td><td>-24.4%</td><td>83</td></tr><tr class="up"><td class="id">e43<br><span>第 4 轮</span></td>
+<td class="name">A024<br><span>Alpha101 #24（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0367</td><td>4.3</td><td>2.8</td>
+<td>-0.20</td><td>-42.2%</td><td>-10.9%</td><td>63</td></tr><tr class="rej"><td class="id">e44<br><span>第 4 轮</span></td>
+<td class="name">A025<br><span>Alpha101 #25（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0062</td><td>1.0</td><td>2.9</td>
+<td>-0.50</td><td>-48.9%</td><td>-18.6%</td><td>65</td></tr><tr class="up"><td class="id">e45<br><span>第 4 轮</span></td>
+<td class="name">A026<br><span>Alpha101 #26（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0339</td><td>5.6</td><td>5.0</td>
+<td>-0.02</td><td>-40.8%</td><td>-6.0%</td><td>83</td></tr><tr class="rej"><td class="id">e46<br><span>第 4 轮</span></td>
+<td class="name">A028<br><span>Alpha101 #28（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0026</td><td>-0.5</td><td>1.3</td>
+<td>-0.41</td><td>-47.1%</td><td>-16.2%</td><td>77</td></tr><tr class="rej"><td class="id">e47<br><span>第 4 轮</span></td>
+<td class="name">A030<br><span>Alpha101 #30（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0035</td><td>-0.5</td><td>2.0</td>
+<td>-0.38</td><td>-50.0%</td><td>-15.7%</td><td>86</td></tr><tr class="rej"><td class="id">e48<br><span>第 4 轮</span></td>
+<td class="name">A033<br><span>Alpha101 #33（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0146</td><td>1.9</td><td>5.4</td>
+<td>-0.51</td><td>-55.9%</td><td>-20.8%</td><td>84</td></tr><tr class="rej"><td class="id">e49<br><span>第 4 轮</span></td>
+<td class="name">A034<br><span>Alpha101 #34（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0079</td><td>1.3</td><td>4.2</td>
+<td>-0.33</td><td>-46.7%</td><td>-14.3%</td><td>85</td></tr><tr class="rej"><td class="id">e50<br><span>第 4 轮</span></td>
+<td class="name">A035<br><span>Alpha101 #35（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0145</td><td>2.0</td><td>4.2</td>
+<td>-0.22</td><td>-45.2%</td><td>-11.3%</td><td>81</td></tr><tr class="rej"><td class="id">e51<br><span>第 4 轮</span></td>
+<td class="name">A037<br><span>Alpha101 #37（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0116</td><td>1.8</td><td>3.9</td>
+<td>-0.38</td><td>-47.8%</td><td>-14.9%</td><td>65</td></tr><tr class="rej"><td class="id">e52<br><span>第 4 轮</span></td>
+<td class="name">A038<br><span>Alpha101 #38（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0219</td><td>2.4</td><td>3.6</td>
+<td>-0.28</td><td>-50.5%</td><td>-13.8%</td><td>83</td></tr><tr class="rej"><td class="id">e53<br><span>第 4 轮</span></td>
+<td class="name">A039<br><span>Alpha101 #39（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0350</td><td>3.2</td><td>2.7</td>
+<td>0.16</td><td>-40.1%</td><td>-0.9%</td><td>64</td></tr><tr class="up"><td class="id">e54<br><span>第 4 轮</span></td>
+<td class="name">A040<br><span>Alpha101 #40（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0680</td><td>7.1</td><td>9.0</td>
+<td>0.22</td><td>-42.6%</td><td>+0.4%</td><td>71</td></tr><tr class="rej"><td class="id">e55<br><span>第 4 轮</span></td>
+<td class="name">A041<br><span>Alpha101 #41（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0119</td><td>2.0</td><td>4.4</td>
+<td>-0.45</td><td>-47.9%</td><td>-17.2%</td><td>71</td></tr><tr class="up"><td class="id">e56<br><span>第 4 轮</span></td>
+<td class="name">A042<br><span>Alpha101 #42（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0403</td><td>4.5</td><td>3.7</td>
+<td>0.38</td><td>-30.4%</td><td>+4.2%</td><td>25</td></tr><tr class="rej"><td class="id">e57<br><span>第 4 轮</span></td>
+<td class="name">A043<br><span>Alpha101 #43（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0066</td><td>-0.8</td><td>3.5</td>
+<td>0.16</td><td>-39.6%</td><td>-1.0%</td><td>88</td></tr><tr class="up"><td class="id">e58<br><span>第 4 轮</span></td>
+<td class="name">A044<br><span>Alpha101 #44（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0355</td><td>7.1</td><td>7.1</td>
+<td>0.15</td><td>-38.3%</td><td>-1.2%</td><td>85</td></tr><tr class="rej"><td class="id">e59<br><span>第 4 轮</span></td>
+<td class="name">A045<br><span>Alpha101 #45（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：与 A012 重复</b></td>
+<td>0.0225</td><td>6.5</td><td>7.0</td>
+<td>0.07</td><td>-39.5%</td><td>-3.3%</td><td>81</td></tr><tr class="up"><td class="id">e60<br><span>第 4 轮</span></td>
+<td class="name">A046<br><span>Alpha101 #46（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0324</td><td>3.6</td><td>2.4</td>
+<td>0.15</td><td>-39.2%</td><td>-1.1%</td><td>83</td></tr><tr class="rej"><td class="id">e61<br><span>第 4 轮</span></td>
+<td class="name">A047<br><span>Alpha101 #47（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0308</td><td>2.7</td><td>3.2</td>
+<td>-0.13</td><td>-45.8%</td><td>-8.7%</td><td>73</td></tr><tr class="rej"><td class="id">e62<br><span>第 4 轮</span></td>
+<td class="name">A049<br><span>Alpha101 #49（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0051</td><td>0.6</td><td>1.5</td>
+<td>0.02</td><td>-42.3%</td><td>-4.9%</td><td>81</td></tr><tr class="up"><td class="id">e63<br><span>第 4 轮</span></td>
+<td class="name">A050<br><span>Alpha101 #50（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0305</td><td>4.8</td><td>6.2</td>
+<td>-0.07</td><td>-42.1%</td><td>-7.0%</td><td>78</td></tr><tr class="rej"><td class="id">e64<br><span>第 4 轮</span></td>
+<td class="name">A051<br><span>Alpha101 #51（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0086</td><td>1.1</td><td>1.8</td>
+<td>-0.04</td><td>-43.5%</td><td>-6.3%</td><td>81</td></tr><tr class="up"><td class="id">e65<br><span>第 4 轮</span></td>
+<td class="name">A052<br><span>Alpha101 #52（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0393</td><td>4.0</td><td>3.0</td>
+<td>0.22</td><td>-39.4%</td><td>+0.7%</td><td>71</td></tr><tr class="rej"><td class="id">e66<br><span>第 4 轮</span></td>
+<td class="name">A053<br><span>Alpha101 #53（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0038</td><td>0.6</td><td>2.5</td>
+<td>-0.38</td><td>-49.0%</td><td>-15.7%</td><td>87</td></tr><tr class="rej"><td class="id">e67<br><span>第 4 轮</span></td>
+<td class="name">A054<br><span>Alpha101 #54（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0059</td><td>-1.1</td><td>2.2</td>
+<td>-0.56</td><td>-51.9%</td><td>-20.2%</td><td>87</td></tr><tr class="up"><td class="id">e68<br><span>第 4 轮</span></td>
+<td class="name">A055<br><span>Alpha101 #55（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill up">晋升</b></td>
+<td>0.0244</td><td>5.3</td><td>6.5</td>
+<td>-0.03</td><td>-38.5%</td><td>-6.1%</td><td>85</td></tr><tr class="rej"><td class="id">e69<br><span>第 4 轮</span></td>
+<td class="name">A057<br><span>Alpha101 #57（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：验证期不显著</b></td>
+<td>0.0083</td><td>1.5</td><td>3.8</td>
+<td>-0.47</td><td>-47.6%</td><td>-17.6%</td><td>73</td></tr><tr class="rej"><td class="id">e70<br><span>第 4 轮</span></td>
+<td class="name">A060<br><span>Alpha101 #60（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0080</td><td>-1.5</td><td>3.0</td>
+<td>-0.11</td><td>-48.8%</td><td>-8.3%</td><td>83</td></tr><tr class="rej"><td class="id">e71<br><span>第 4 轮</span></td>
+<td class="name">A101<br><span>Alpha101 #101（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改</span></td>
+<td><b class="pill rej">拒绝：方向为负</b></td>
+<td>-0.0129</td><td>-1.9</td><td>-5.0</td>
+<td>-0.33</td><td>-43.4%</td><td>-13.7%</td><td>87</td></tr></table></body></html>

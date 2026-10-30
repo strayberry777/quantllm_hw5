@@ -14,6 +14,7 @@ from bt.factor_eval import BUILTIN, HELPERS, EvalConfig, Factor     # noqa: E402
 CFG = json.loads((HERE / "config.json").read_text())
 LEDGER = HERE / "ledger.jsonl"
 EXAMS = HERE / "exams.jsonl"
+CACHE = HERE / "cache"
 _DATA = None
 
 
@@ -36,6 +37,11 @@ def eval_cfg(period: str, backtest: bool = True) -> EvalConfig:
 
 def load_factor(path: str) -> tuple[str, Factor, str]:
     """读取 factors/<名字>.py 或 builtin:<KEY>。返回 (名字, Factor, 假设)。"""
+    if path.startswith("alpha101:"):
+        import alpha101
+        k = path.split(":", 1)[1]
+        return k, Factor(k, f"Alpha101 #{int(k[1:])}", "Alpha101 公式因子", alpha101.factor_fn(k)), \
+            f"Alpha101 #{int(k[1:])}（Kakushadze 2016）原公式，按本数据的映射实现，未做任何修改"
     if path.startswith("builtin:"):
         k = path.split(":", 1)[1]
         return k, BUILTIN[k], f"内建基准：{BUILTIN[k].desc}"

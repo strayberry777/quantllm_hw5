@@ -51,3 +51,29 @@ ax.set_ylabel("净值（扣费）")
 ax.set_title("留出期考试（2025-01 至 2026-09，每个因子只考一次）：做多最高 10%", loc="left", fontsize=10.5)
 fig.tight_layout(); fig.savefig(IMG / "loop_holdout.png", dpi=160); plt.close(fig)
 print("ok")
+
+# 留出期：全部考试（冠军 + 追加考试）
+nav2 = pd.read_csv(HERE / "exam_nav_pools.csv", index_col=0, parse_dates=True)
+nav3 = pd.read_csv(HERE / "exam_nav_A012_A042.csv", index_col=0, parse_dates=True)
+allnav = pd.concat([nav, nav2.drop(columns="POOL"), nav3.drop(columns="POOL")], axis=1)
+series = [("POOL", "股票池等权（基准）", INK, 1.6), ("POOL_R4", "因子池 22 个等权（含 Alpha101）", "#c0392b", 2.4),
+          ("POOL_R3", "因子池 6 个等权（第 0–3 轮）", "#d98c6a", 1.8), ("IVOL60", "IVOL60（夏普冠军）", BLUE, 1.8),
+          ("A042", "A042（Alpha101 扣费后最好）", "#8a6fd1", 1.5), ("EXT5", "EXT5（IC 冠军）", ORANGE, 1.2),
+          ("LOWVOL60", "LOWVOL60（回撤冠军）", GREEN, 1.2), ("A012", "A012（Alpha101 IC 最强）", GREY, 1.2)]
+fig, ax = plt.subplots(figsize=(10, 5.2))
+ends = []
+for k, lab, c, lw in series:
+    ax.plot(allnav.index, allnav[k], color=c, lw=lw)
+    ends.append([allnav[k].iloc[-1], f"  {lab} {allnav[k].iloc[-1] - 1:+.1%}", c])
+ends.sort(key=lambda e: e[0])
+for i in range(1, len(ends)):
+    ends[i][0] = max(ends[i][0], ends[i - 1][0] + 0.035)
+for y, t, c in ends:
+    ax.text(allnav.index[-1], y, t, va="center", fontsize=8.5, color=c)
+ax.axhline(1, color=INK2, lw=0.6)
+ax.yaxis.grid(True, color=GRID, lw=0.8)
+ax.set_xlim(allnav.index[0], allnav.index[-1] + pd.Timedelta(days=330))
+ax.set_ylabel("净值（扣费）")
+ax.set_title("留出期全部考试（2025-01 至 2026-09，每个只考一次）：做多最高 10%", loc="left", fontsize=10.5)
+fig.tight_layout(); fig.savefig(IMG / "loop_holdout_all.png", dpi=160); plt.close(fig)
+print((allnav.iloc[-1] - 1).round(4).to_dict())

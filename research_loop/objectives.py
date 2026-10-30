@@ -34,3 +34,28 @@ def scores(t: pd.DataFrame) -> pd.DataFrame:
 def bonferroni_t(n_trials: int, alpha: float = 0.05) -> float:
     from statistics import NormalDist
     return NormalDist().inv_cdf(1 - alpha / 2 / max(n_trials, 1))
+
+
+def novelty(rows: list[dict], t: pd.DataFrame) -> pd.Series:
+    """与第 0–3 轮冠军（EXT5、IVOL60、LOWVOL60）的最大绝对相关。旧日志没有这一列时从缓存计算。"""
+    import numpy as np
+    from common import CACHE
+    from bt.factor_eval import corr_rows
+    champ = {k: np.load(CACHE / f"{k}.npy") for k in ("EXT5", "IVOL60", "LOWVOL60") if (CACHE / f"{k}.npy").exists()}
+    out = {}
+    for r in rows:
+        k = r["name"]
+        if k not in t.index:
+            continue
+        if r.get("corr_champions") is not None:
+            out[k] = r["corr_champions"]
+        elif (CACHE / f"{k}.npy").exists():
+            rk = np.load(CACHE / f"{k}.npy")
+            out[k] = max([abs(float(np.nanmean(corr_rows(rk, v)))) for k2, v in champ.items() if k2 != k] or [0.0])
+    return pd.Series(out)
+
+
+def scores_with_novelty(rows, t):
+    s = scores(t)
+    s["NOVEL"] = s["MIX"] - novelty(rows, t).reindex(t.index).fillna(0)
+    return s
