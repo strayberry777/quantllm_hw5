@@ -1,4 +1,4 @@
-"""研究迴圈的报告图：验证期全部候选的夏普—回撤散点、留出期冠军净值。"""
+"""研究循环的报告图：验证期全部候选的夏普—回撤散点、留出期冠军净值。"""
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
