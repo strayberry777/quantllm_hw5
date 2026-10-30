@@ -1,0 +1,5 @@
+group,segment,mean_excess_bp_per_week,t_stat,weeks
+D1_losers,overnight,-3.7462,-2.5264,316
+D1_losers,hold,-13.5044,-1.5045,316
+D10_winners,overnight,-16.8184,-6.9155,316
+D10_winners,hold,-47.6238,-4.7480,316
