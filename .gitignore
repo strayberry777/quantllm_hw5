@@ -1,0 +1,7 @@
+raw/
+*.feather
+__pycache__/
+.pytest_cache/
+.DS_Store
+.env
+*.local.*
